@@ -6,7 +6,7 @@ const TelegramBot = require("node-telegram-bot-api");
 const token = process.env.TOKEN;
 const chatId = process.env.CHAT_ID;
 const interval = process.env.INTERVAL || 10000;
-const term = process.env.SEARCH_TERM || 'ФАН';
+const term = process.env.SEARCH_TERM || "ФАН";
 const bot = new TelegramBot(token, { polling: true });
 
 const parseSector = $ => el => {
@@ -29,7 +29,9 @@ const findSectorByName = async (text = "ФАН") => {
     .find("tr")
     .toArray()
     .map(parseSector($));
-  const sector = _.find(sectors, ({ name }) => _.includes(name, text));
+  const sector = _.find(sectors, ({ name }) =>
+    _.includes(_.toLower(name), _.toLower(text))
+  );
   return sector;
 };
 
@@ -51,20 +53,23 @@ const checkTickets = async () => {
 
     if (amount !== prevAmount) {
       const message = `Обновились билеты в ${name}, осталось билетов: ${amount}.\nКупить: https://metallica.kassir.ru/koncert/metallica`;
-      sendMessageToTelegram(message);
+      await sendMessageToTelegram(message);
+      console.log(`Обновилось количество в ${name}, осталось билетов: ${amount}`);
+    } else {
+      console.log("Количество билетов не обновилось.");
     }
 
     prevAmount = amount;
   } catch (e) {
-    console.log(e.message);
+    console.log('Ошибка: ', e.message);
   }
 };
 
 // Matches "/echo [whatever]"
-bot.onText(/\/ping/, (msg) => {
+bot.onText(/\/ping/, msg => {
   const chatId = msg.chat.id;
   // send back the matched "whatever" to the chat
-  bot.sendMessage(chatId, 'pong');
+  bot.sendMessage(chatId, "pong");
 });
 
 checkTickets();
