@@ -1,6 +1,6 @@
 {
   "name": "tg-bot-metallica",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "node-telegram-bot-api": "^0.30.0"
   },
   "bin": {
-    "metallica-bot": "node index.js"
+    "tg-bot-metallica": "node index.js"
   },
   "devDependencies": {
     "nodemon": "^1.18.4"
